@@ -128,7 +128,20 @@ namespace CakeCompany.API
                     TermsOfService = "None",
                     Contact = new Contact() { Name = "Priyantha", Email = "weligamagepriya@gmail.com", Url = "weligamagepriya@gmail.com" }
                 });
-                c.IncludeXmlComments(GetXmlCommentsPath()); 
+                c.IncludeXmlComments(GetXmlCommentsPath());
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                };
+
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(security);
             });
         }
 
@@ -167,6 +180,7 @@ namespace CakeCompany.API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cake Company API V1");
+                c.DocExpansion(DocExpansion.None);
             });
         }
 
