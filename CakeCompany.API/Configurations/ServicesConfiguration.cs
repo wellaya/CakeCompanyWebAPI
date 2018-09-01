@@ -47,10 +47,10 @@ namespace CakeCompany.API.Configurations
             corsBuilder.AllowAnyMethod();
             corsBuilder.AllowAnyOrigin();
             corsBuilder.AllowCredentials();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", corsBuilder.Build());
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAll", corsBuilder.Build());
+            //});
 
             return services;
         }

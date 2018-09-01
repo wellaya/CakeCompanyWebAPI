@@ -53,6 +53,7 @@ namespace CakeCompany.API
               b => b.MigrationsAssembly("CakeCompany.Infrastructure")));
 
             services.ConfigureRepositories()
+                //.AddCorsConfiguration()
                 .ConfigureServices();
 
             services.TryAddTransient<Microsoft.AspNetCore.Http.IHttpContextAccessor, HttpContextAccessor>();
@@ -115,7 +116,7 @@ namespace CakeCompany.API
             });
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
             builder.AddEntityFrameworkStores<CakeCompanyContext>().AddDefaultTokenProviders();
-
+            services.AddCors();
             services.AddMvc();
 
             services.AddSwaggerGen(c =>
@@ -143,6 +144,8 @@ namespace CakeCompany.API
                 });
                 c.AddSecurityRequirement(security);
             });
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -175,7 +178,12 @@ namespace CakeCompany.API
             app.UseAuthentication();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod()
+                        .AllowAnyHeader()
+            );
             app.UseMvc();
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
