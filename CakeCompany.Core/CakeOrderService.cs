@@ -80,13 +80,26 @@ namespace CakeCompany.Core
 
         public async Task<CakeOrderViewModel> CalculateTotalPrice(CakeOrderViewModel model)
         {
-            var initialData = await this.GetInitialData();
-            List<string> toppings = model.Toppings.Split(',').ToList();
-            ICake cake = initialData.CakeShapes.Where(x => x.Code.Trim() == model.ShapeCode.Trim()).FirstOrDefault();
-            cake.Toppings = initialData.Toppings.Where(w => toppings.Any(code => code == w.Code)).ToList();
-            cake.Message = model.Message;
-            cake.Size = model.Size;
-            model.TotalPrice = cake.CalculatePrice();
+            if (!string.IsNullOrEmpty(model.ShapeCode))
+            {
+                var initialData = await this.GetInitialData();
+                List<string> toppings = new List<string>();
+                if (model.Toppings != null)
+                {
+                    toppings = model.Toppings.Split(',').ToList();
+                }
+
+                ICake cake = initialData.CakeShapes.Where(x => x.Code.Trim() == model.ShapeCode.Trim()).FirstOrDefault();
+                cake.Toppings = initialData.Toppings.Where(w => toppings.Any(code => code == w.Code)).ToList();
+                cake.Message = model.Message;
+                cake.Size = model.Size;
+                model.TotalPrice = cake.CalculatePrice();
+            }
+            else
+            {
+                model.TotalPrice = 0;
+            }
+
             return model;
         }
     }
